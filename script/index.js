@@ -8,6 +8,7 @@ const removeActive=()=>{
     activeBtn.forEach(btn=>btn.classList.remove("active"));
 };
 
+
 const loadLevelWord=(id)=>{
     // console.log(id)
     const url =`https://openapi.programming-hero.com/api/level/${id}`;
@@ -20,6 +21,54 @@ const loadLevelWord=(id)=>{
         clickBtn.classList.add("active")
         displayLevelWord(data.data)
     });
+};
+
+const loadDetails=async(id)=>{
+    const url =`https://openapi.programming-hero.com/api/word/${id}`
+    // console.log(url)
+    const res = await fetch(url);
+    const details = await res.json();
+    displayDetails(details.data)
+
+
+}
+
+const displayDetails = (word)=>{
+    const detailBox = document.getElementById('details-container');
+    // "word": "Eager",    
+    // "meaning": "আগ্রহী",  
+    // "pronunciation": "ইগার",    
+    // "level": 1,    
+    // "sentence": "The kids were eager to open their gifts.",
+        
+    // "points": 1,    
+    // "partsOfSpeech": "adjective",    
+    // "synonyms": 
+    // [      
+    // "enthusiastic",      
+    // "excited",      
+    // "keen"    
+    // ]
+    detailBox.innerHTML=`
+        <div>
+            <h2 class="text-2xl font-bold">${word.word} (<i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})</h2>
+        </div>
+        <div>
+            <h2 class="font-bold">Meaning</h2>
+            <p>${word.meaning}</p>
+        </div>
+        <div>
+            <h2 class="font-bold">Example</h2>
+            <p>${word.sentence}</p>
+        </div>
+        <div>
+            <h2 class="font-bold">Synonyms</h2>
+            <span class="btn">syn1</span>
+            <span class="btn">syn2</span>
+            <span class="btn">syn3</span>
+        </div>
+    `;
+    document.getElementById('my_modal_5').showModal();
 };
 
 const displayLevelWord=(words)=> {
@@ -56,7 +105,7 @@ const displayLevelWord=(words)=> {
                 ${word.meaning?word.meaning:"no meaning found"} / ${word.pronunciation?word.pronunciation:"no pronunciation found"}
             </div>
             <div class="flex justify-between items-center">
-                <button onclick="my_modal_5.showModal()" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
+                <button onclick="loadDetails(${word.id})" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
                 <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
             </div>
         </div>
