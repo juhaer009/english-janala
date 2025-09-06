@@ -33,6 +33,11 @@ const loadDetails=async(id)=>{
 
 }
 
+const displaySynonym=(arr)=>{
+    const synonymElement = arr.map((el)=> `<span class="btn">${el}</span>`)
+    return synonymElement.join(" ")
+}
+
 const displayDetails = (word)=>{
     const detailBox = document.getElementById('details-container');
     // "word": "Eager",    
@@ -63,9 +68,7 @@ const displayDetails = (word)=>{
         </div>
         <div>
             <h2 class="font-bold">Synonyms</h2>
-            <span class="btn">syn1</span>
-            <span class="btn">syn2</span>
-            <span class="btn">syn3</span>
+            <div>${displaySynonym(word.synonyms)}</div>
         </div>
     `;
     document.getElementById('my_modal_5').showModal();
@@ -129,3 +132,21 @@ const displayLessons= (lessons) => {
     }
 };
 loadLessons();
+
+document.getElementById('btn-search').
+    addEventListener('click',()=>{
+        removeActive()
+        const input = document.getElementById('input-search')
+        const inputValue = input.value.trim().toLowerCase()
+
+        fetch("https://openapi.programming-hero.com/api/words/all")
+        .then((res)=> res.json())
+        .then((data)=> {
+            const allWords = data.data;
+            // console.log(allWords)
+            const filterWord = allWords.filter((word)=>
+                word.word.toLowerCase().includes(inputValue)
+            )
+            displayLevelWord(filterWord)
+        })
+    })
